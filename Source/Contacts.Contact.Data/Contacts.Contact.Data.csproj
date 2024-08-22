@@ -1,0 +1,15 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Contacts.Contact.Domain\Contacts.Contact.Domain.csproj" />
+    <ProjectReference Include="..\Contacts.Contact.Domain\Contacts.Contact.Domain.csproj" />
+    <ProjectReference Include="..\Contacts.Core\Contacts.Core.csproj" />
+  </ItemGroup>
+
+</Project>
