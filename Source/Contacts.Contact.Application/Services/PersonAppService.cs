@@ -20,12 +20,12 @@ namespace Contacts.Contact.Application.Services
 
      
 
-        public async Task<RequestResponse<PersonViewModel>> GetContact(Guid Id)
+        public async Task<RequestResponse<PersonViewModel>> GetContact(Guid Id, int IdUser)
         {
             try
             {
                 return new RequestResponse<PersonViewModel>(
-                    this._mapper.Map<PersonViewModel>(await _personRepository.GetById(Id))
+                    this._mapper.Map<PersonViewModel>(await _personRepository.GetById(Id, IdUser))
                     , new Notifiable());
             }
             catch (Exception ex)
@@ -34,12 +34,12 @@ namespace Contacts.Contact.Application.Services
             }
         }
 
-        public async Task<RequestResponse<IEnumerable<PersonViewModel>>> GetContacts()
+        public async Task<RequestResponse<IEnumerable<PersonViewModel>>> GetContacts(int IdUser)
         {
             try
             {
                 return new RequestResponse<IEnumerable<PersonViewModel>>(
-                    this._mapper.Map<IEnumerable<PersonViewModel>>(await _personRepository.GetAllAsync())
+                    this._mapper.Map<IEnumerable<PersonViewModel>>(await _personRepository.GetAllAsync(IdUser))
                     , new Notifiable());
             }
             catch (Exception ex)
@@ -48,7 +48,7 @@ namespace Contacts.Contact.Application.Services
             }
         }
 
-        public async Task<RequestResponse<IEnumerable<PersonViewModel>>> GetContactsFromFilter(string filter)
+        public async Task<RequestResponse<IEnumerable<PersonViewModel>>> GetContactsFromFilter(string filter, int IdUser)
         {
             try
             {
@@ -57,7 +57,7 @@ namespace Contacts.Contact.Application.Services
 
 
                 return new RequestResponse<IEnumerable<PersonViewModel>>(
-                    this._mapper.Map<IEnumerable<PersonViewModel>>(await _personRepository.GetByFilterAsync(filter))
+                    this._mapper.Map<IEnumerable<PersonViewModel>>(await _personRepository.GetByFilterAsync(filter, IdUser))
                     , new Notifiable());
             }
             catch (Exception ex)
@@ -100,7 +100,7 @@ namespace Contacts.Contact.Application.Services
             {
                 var person = _mapper.Map<Person>(model);
                 person.Validate();
-                var orig = await _personRepository.GetById(person.UUId);
+                var orig = await _personRepository.GetById(person.UUId, model.UserId);
 
                 if (orig is null)
                     noticable.AddNotification("Person not found!");
@@ -129,7 +129,7 @@ namespace Contacts.Contact.Application.Services
             var noticable = new Notifiable();
             try
             {
-                var orig = await _personRepository.GetById(Id);
+                var orig = await _personRepository.GetById(Id, UserId);
 
                 if (orig is null)
                     throw new Exception("Person not found!");

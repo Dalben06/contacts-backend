@@ -12,11 +12,10 @@ builder.Services.AddSwaggerConfiguration();
 Contacts.DependencyInjection.DependencyInjection.RegisterServices(builder.Services, builder.Configuration);
 builder.Services.AddCors(policyBuilder =>
     policyBuilder.AddDefaultPolicy(policy =>
-        policy.WithOrigins("http://localhost:5173")
+        policy.WithOrigins("http://localhost:4200")
                 .AllowAnyMethod()
                 .AllowAnyHeader()
                 .AllowCredentials())
-
 );
 
 builder.Services.AddJWTConfiguration(builder.Configuration.Get<Settings>() ?? new Settings());
@@ -35,5 +34,5 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
-
+app.UseCors();
 app.Run();

@@ -22,22 +22,23 @@ namespace Contacts.Contact.Data.Repositories
             return @"SELECT Persons.* FROM Persons WHERE 1=1 and Persons.IsDeleted = 0 ";
         }
 
-        public async Task<Person> GetById(Guid id)
+        public async Task<Person> GetById(Guid id, int IdUser)
         {
-            return await _dbContext.DbConnection.QueryFirstOrDefaultAsync<Person>(GetDefaultSql() + " AND Persons.UUId = @id", new { id});
+            return await _dbContext.DbConnection.QueryFirstOrDefaultAsync<Person>(GetDefaultSql() + " AND Persons.CreateUserId = @IdUser  AND Persons.UUId = @id", new { id, IdUser });
         }
-        public async Task<IEnumerable<Person>> GetAllAsync()
+        public async Task<IEnumerable<Person>> GetAllAsync(int IdUser)
         {
-            return await _dbContext.DbConnection.QueryAsync<Person>(GetDefaultSql());
+            return await _dbContext.DbConnection.QueryAsync<Person>(GetDefaultSql() + " AND Persons.CreateUserId = @IdUser", new {IdUser});
         }
 
-        public async Task<IEnumerable<Person>> GetByFilterAsync(string searchWord)
+        public async Task<IEnumerable<Person>> GetByFilterAsync(string searchWord, int IdUser)
         {
-            var sql = GetDefaultSql() + @" AND Persons.Name like @searchWord 
-                                           AND Persons.Number like @searchWord
-                                           AND Persons.Email like @searchWord";
+            var sql = GetDefaultSql() + @" AND (Persons.Name like @searchWord 
+                                           OR Persons.Number like @searchWord
+                                           OR Persons.Email like @searchWord)
+                                            AND Persons.CreateUserId = @IdUser";
 
-            return await _dbContext.DbConnection.QueryAsync<Person>(sql, searchWord );
+            return await _dbContext.DbConnection.QueryAsync<Person>(sql, new { searchWord, IdUser} );
         }
         
         public async Task<Person> InsertAsync(Person person)

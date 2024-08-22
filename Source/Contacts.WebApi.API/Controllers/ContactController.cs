@@ -22,19 +22,19 @@ namespace Contacts.WebApi.API.Controllers
         [HttpGet("GetAll")]
         public async Task<IActionResult> GetAll()
         {
-            return HttpResponse(await this._personService.GetContacts());
+            return HttpResponse(await this._personService.GetContacts(this.userSession.UserId));
         }
 
         [HttpGet("GetFilter/{filter}")]
         public async Task<IActionResult> GetAll(string filter)
         {
-            return HttpResponse(await this._personService.GetContactsFromFilter(filter));
+            return HttpResponse(await this._personService.GetContactsFromFilter(filter, this.userSession.UserId));
         }
 
         [HttpGet("Get/{Id}")]
         public async Task<IActionResult> Get(Guid Id)
         {
-            return HttpResponse(await this._personService.GetContact(Id));
+            return HttpResponse(await this._personService.GetContact(Id, this.userSession.UserId));
         }
 
         [HttpPost("CreateContact")]
